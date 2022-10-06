@@ -18,11 +18,11 @@
             </Tab>
         </TabBar>
         {#if active === 'Events'}
-            <AddEvent provider={provider}/>
+            <UserEvents provider={provider}/>
         {/if}
-        {#if active === 'Tickets'}
+        <!--{#if active === 'Tickets'}-->
 
-        {/if}
+        <!--{/if}-->
     </div>
 
 
@@ -37,12 +37,13 @@
     import Button, {Label} from '@smui/button';
     import Tab, {Label as TabLabel,} from '@smui/tab';
     import TabBar from '@smui/tab-bar';
-    import AddEvent from "../AddEvent.svelte";
+    import UserEvents from "../UserEvents.svelte";
+    import {provider} from "../../lib/stores/providerStore.js";
+    import {getEventsByOwner} from "../../lib/clients/ethicketsAbiClient.js";
 
 
     let active = 'Events';
 
-    let provider;
     let eventName = '';
     let eventDescription = '';
     let eventDate = '';
@@ -76,7 +77,8 @@
                 alert("You need to have Metamask installed.");
             }, 1000)
         } else {
-            provider = new ethers.providers.Web3Provider(window.ethereum);
+            const p = new ethers.providers.Web3Provider(window.ethereum);
+            provider.update(e => p);
             window.ethereum.on("chainChanged", handleChainChanged)
             window.ethereum.on("accountsChanged", handleAccountsChanged)
             window.ethereum.on("disconnect", handleDisconnect)
@@ -93,13 +95,14 @@
     })
 
     const handleAccountsChanged = async () => {
-        const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const addresses = await provider.listAccounts();
+        // provider = new ethers.providers.Web3Provider(window.ethereum);
+        const addresses = await $provider.listAccounts();
         if (addresses.length === 0) {
             console.log("Please connect to Metamask");
             selectedAccount = null;
         } else if (addresses[0] !== selectedAccount) {
             selectedAccount = addresses[0];
+            await getEventsByOwner();
         }
     };
 
@@ -120,15 +123,6 @@
     const disconnectWallet = () => {
         selectedAccount = null;
     };
-
-    const getContract = (contractAddress, abi) => {
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        return new ethers.Contract(contractAddress, abi, signer);
-    }
-
-
-
 
 
 

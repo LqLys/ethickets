@@ -1,5 +1,5 @@
 export const contractAddress = '0x5FbDB2315678afecb367f032d93F642f64180aa3';
-export const abi = [
+export const abi =  [
     {
         "inputs": [],
         "stateMutability": "nonpayable",
@@ -249,6 +249,62 @@ export const abi = [
     {
         "inputs": [],
         "name": "getEvents",
+        "outputs": [
+            {
+                "components": [
+                    {
+                        "internalType": "uint256",
+                        "name": "id",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "address",
+                        "name": "owner",
+                        "type": "address"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "name",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "description",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "uint256",
+                        "name": "dateTime",
+                        "type": "uint256"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "location",
+                        "type": "string"
+                    },
+                    {
+                        "internalType": "string",
+                        "name": "imgUrl",
+                        "type": "string"
+                    }
+                ],
+                "internalType": "struct Ethickets.BasicEventInfo[]",
+                "name": "",
+                "type": "tuple[]"
+            }
+        ],
+        "stateMutability": "view",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "_owner",
+                "type": "address"
+            }
+        ],
+        "name": "getEventsByOwner",
         "outputs": [
             {
                 "components": [

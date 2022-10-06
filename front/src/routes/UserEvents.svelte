@@ -38,7 +38,7 @@
         </Head>
         <Body>
 
-        {#each allEvents as event (event.id)}
+        {#each $selectedAccountEvents as event (event.id)}
             <Row>
                 <Cell>{event.name}</Cell>
                 <Cell>{event.location}</Cell>
@@ -58,6 +58,8 @@
     import {ethers} from "ethers";
     import {selectedAccountEvents} from "../lib/stores/eventStores.js";
     import {onMount} from "svelte";
+    import {getContract} from "../lib/clients/ethicketsAbiClient.js";
+    import {getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
 
     export let provider;
 
@@ -67,23 +69,11 @@
     let eventLocation = '';
     let imgUrl = '';
 
-    let allEvents = [];
 
     onMount(async () => {
-
-        selectedAccountEvents.subscribe(data => {
-            allEvents = data;
-        })
-        await getEvents();
-
-
+        await getEventsByOwner();
+        console.log($provider.provider.selectedAddress)
     })
-
-    const getContract = (contractAddress, abi) => {
-        // const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const signer = provider.getSigner();
-        return new ethers.Contract(contractAddress, abi, signer);
-    }
 
     async function handleCreateEvent() {
         if (browser && typeof window.ethereum !== "undefined") {
@@ -97,7 +87,8 @@
                 const transaction = await contract.createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl);
                 const eventId = await transaction.wait();
                 console.log('eventId: ', eventId)
-                await getEvents();
+                await getEventsByOwner();
+                clearFormFields();
                 // selectedAccountEvents.update(e => [...e]);
             } catch (err) {
                 console.log(err)
@@ -105,14 +96,25 @@
         }
     }
 
+    function clearFormFields(){
+        eventName = '';
+        eventDescription = '';
+        eventDate = '';
+        eventLocation = '';
+        imgUrl = '';
+    }
+
     async function getEvents() {
         if (browser && typeof window.ethereum !== "undefined") {
             const contract = getContract(contractAddress, abi);
             try {
-                    allEvents = await contract.getEvents()
+                 const eventz = await contract.getEvents()
+                selectedAccountEvents.update( e => eventz);
+
             } catch (err) {
                 console.log(err)
             }
         }
     }
+
 </script>

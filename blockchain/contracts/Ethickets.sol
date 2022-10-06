@@ -133,4 +133,18 @@ contract Ethickets is Ownable {
         return allEvents;
     }
 
+    function getEventsByOwner(address _owner) public view returns(BasicEventInfo[] memory){
+        BasicEventInfo[] memory allEvents = new BasicEventInfo[](eventIdCounter);
+        uint index;
+        for(uint i = 0; i < eventIdCounter; i++){
+            Event storage _event = events[i];
+            if(_event.owner == _owner){
+                allEvents[index] = BasicEventInfo(_event.id, _event.owner, _event.name, _event.description, _event.dateTime,
+                    _event.location, _event.imgUrl);
+                index++;
+            }
+        }
+        return allEvents;
+    }
+
 }
