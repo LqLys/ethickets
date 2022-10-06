@@ -5,7 +5,10 @@
         </Button>
     </div>
 {:else }
-    <h1>{selectedAccount}</h1>
+    <Paper color="primary">
+        <Title style="text-align: center">Selected Wallet</Title>
+        <Content style="text-align: center"> {selectedAccount} </Content>
+    </Paper>
 
     <div>
         <!--
@@ -40,6 +43,7 @@
     import UserEvents from "../UserEvents.svelte";
     import {provider} from "../../lib/stores/providerStore.js";
     import {getEventsByOwner} from "../../lib/clients/ethicketsAbiClient.js";
+    import Paper, { Title, Content } from '@smui/paper';
 
 
     let active = 'Events';
@@ -77,7 +81,7 @@
                 alert("You need to have Metamask installed.");
             }, 1000)
         } else {
-            const p = new ethers.providers.Web3Provider(window.ethereum);
+            const p = new ethers.providers.Web3Provider(window.ethereum, 'any');
             provider.update(e => p);
             window.ethereum.on("chainChanged", handleChainChanged)
             window.ethereum.on("accountsChanged", handleAccountsChanged)

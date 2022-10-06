@@ -42,7 +42,7 @@
             <Row>
                 <Cell>{event.name}</Cell>
                 <Cell>{event.location}</Cell>
-                <Cell>{new Date(event.dateTime * 1000)}</Cell>
+                <Cell>{new Date(+event.dateTime).toLocaleString()}</Cell>
             </Row>
         {/each}
         </Body>
