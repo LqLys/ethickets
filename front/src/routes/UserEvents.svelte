@@ -39,7 +39,7 @@
         <Body>
 
         {#each $selectedAccountEvents as event (event.id)}
-            <Row>
+            <Row on:click={async () => await goto(`/events/${event.id}`, {replaceState: false})}>
                 <Cell>{event.name}</Cell>
                 <Cell>{event.location}</Cell>
                 <Cell>{new Date(+event.dateTime).toLocaleString()}</Cell>
@@ -54,25 +54,29 @@
     import Textfield from '@smui/textfield';
     import Button, {Label} from '@smui/button';
     import {browser} from "$app/environment";
-    import {abi, contractAddress} from "../lib/constants/constants.js";
     import {ethers} from "ethers";
     import {selectedAccountEvents} from "../lib/stores/eventStores.js";
+    import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
+    import {provider} from "../lib/stores/providerStore.js";
     import {onMount} from "svelte";
     import {getContract} from "../lib/clients/ethicketsAbiClient.js";
     import {getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
+    import {goto} from "$app/navigation";
+    import {contractAddress, abi} from "../lib/constants/constants.js";
 
-    export let provider;
+
+    // export let provider;
 
     let eventName = '';
     let eventDescription = '';
     let eventDate = '';
     let eventLocation = '';
     let imgUrl = '';
-
+    $: async ($selectedAccount) => { await getEventsByOwner(contractAddress, abi, $provider);}
 
     onMount(async () => {
-        await getEventsByOwner();
-        console.log($provider.provider.selectedAddress)
+        // await getEventsByOwner(contractAddress, abi, $provider);
+        // console.log($provider.provider.selectedAddress)
     })
 
     async function handleCreateEvent() {
@@ -81,13 +85,13 @@
             const timestamp = date1.getTime();
             console.log(timestamp);
 
-            const contract = getContract(contractAddress, abi);
+            const contract = getContract(contractAddress, abi, provider);
 
             try {
                 const transaction = await contract.createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl);
                 const eventId = await transaction.wait();
                 console.log('eventId: ', eventId)
-                await getEventsByOwner();
+                await getEventsByOwner(contractAddress, abi, provider);
                 clearFormFields();
                 // selectedAccountEvents.update(e => [...e]);
             } catch (err) {
@@ -106,7 +110,7 @@
 
     async function getEvents() {
         if (browser && typeof window.ethereum !== "undefined") {
-            const contract = getContract(contractAddress, abi);
+            const contract = getContract(contractAddress, abi, provider);
             try {
                  const eventz = await contract.getEvents()
                 selectedAccountEvents.update( e => eventz);
@@ -118,3 +122,8 @@
     }
 
 </script>
+<style>
+    :global(.mdc-text-field__input::-webkit-calendar-picker-indicator) {
+        display: initial !important;
+    }
+</style>
