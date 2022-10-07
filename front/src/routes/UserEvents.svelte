@@ -75,23 +75,24 @@
     $: async ($selectedAccount) => { await getEventsByOwner(contractAddress, abi, $provider);}
 
     onMount(async () => {
-        // await getEventsByOwner(contractAddress, abi, $provider);
-        // console.log($provider.provider.selectedAddress)
+        await getEventsByOwner(contractAddress, abi, $provider);
     })
 
     async function handleCreateEvent() {
+        console.log('out')
         if (browser && typeof window.ethereum !== "undefined") {
+            console.log('in')
             const date1 = new Date(eventDate);
             const timestamp = date1.getTime();
             console.log(timestamp);
 
-            const contract = getContract(contractAddress, abi, provider);
+            const contract = getContract(contractAddress, abi, $provider);
 
             try {
                 const transaction = await contract.createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl);
                 const eventId = await transaction.wait();
                 console.log('eventId: ', eventId)
-                await getEventsByOwner(contractAddress, abi, provider);
+                await getEventsByOwner(contractAddress, abi, $provider);
                 clearFormFields();
                 // selectedAccountEvents.update(e => [...e]);
             } catch (err) {

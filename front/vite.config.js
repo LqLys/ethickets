@@ -20,7 +20,8 @@ const config = {
 		// ↓ Needed for build if using WalletConnect and other providers
 		commonjsOptions: {
 			transformMixedEsModules: true
-		}
+		},
+		sourcemap: true
 	}
 };
 

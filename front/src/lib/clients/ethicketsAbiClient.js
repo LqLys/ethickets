@@ -34,3 +34,14 @@ export async function getEventById(eventId, contractAddress, abi, provider) {
         console.log(err)
     }
 }
+
+export async function getAllEvents(contractAddress, abi, provider) {
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const events = await contract.getEvents()
+        return events;
+
+    } catch (err) {
+        console.log(err)
+    }
+}

@@ -21,11 +21,6 @@
 		} else {
 			web3Provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
 			provider.update(e => web3Provider);
-			const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
-			if(accounts.length){
-				selectedAccount.update(e => accounts[0]);
-				await getEventsByOwner(contractAddress, abi, web3Provider);
-			}
 
 			window.ethereum.on("chainChanged", handleChainChanged)
 			window.ethereum.on("accountsChanged", handleAccountsChanged)
@@ -76,8 +71,7 @@
 	async function handleConnectWallet() {
 		if (browser) {
 			try {
-
-				const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
+					const accounts = await window.ethereum.request({method: "eth_requestAccounts"});
 				selectedAccount.update(e => accounts[0]);
 			} catch (err) {
 				console.log(err);

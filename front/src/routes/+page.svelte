@@ -1,10 +1,39 @@
 <script>
-    import Button, {Label} from '@smui/button';
-    import {browser} from "$app/environment";
-	import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
-    import {ethers} from "ethers";
+    import List, {Item, Meta, PrimaryText, SecondaryText, Text,} from '@smui/list';
+
+    import {Image,} from '@smui/image-list';
+    import {onMount} from "svelte";
+    import {getAllEvents} from "../lib/clients/ethicketsAbiClient.js";
+    import {contractAddress, abi} from "../lib/constants/constants.js";
     import {provider} from "../lib/stores/providerStore.js";
 
+    let options = [
+        {
+            name: 'Bruce Willis',
+            description: 'Actor',
+            disabled: false,
+        },
+        {
+            name: 'Thomas Edison',
+            description: 'Inventor',
+            disabled: false,
+        },
+        {
+            name: 'Stephen Hawking',
+            description: 'Scientist',
+            disabled: false,
+        },
+    ];
+
+    let events = [];
+    let selection = 'Stephen Hawking';
+    // This value is updated when the component is initialized, based on the
+    // selected Item's `selected` prop.
+    let selectionIndex = 0;
+
+    onMount(async () => {
+        events = await getAllEvents(contractAddress, abi, $provider);
+    })
 
 
 </script>
@@ -15,16 +44,40 @@
 </svelte:head>
 
 <section>
-    {#if !$selectedAccount}
-        <div style="width: 100%; padding-bottom: 10px">
-            <Button on:click={handleConnectWallet} variant="raised" style="width: 100%;">
-                <Label>Connect Wallet</Label>
-            </Button>
-        </div>
-    {/if}
+    <div style="width: 100%">
+        <List
+                class="demo-list"
+                twoLine
+                avatarList
+                singleSelection
+                bind:selectedIndex={selectionIndex}
+
+        >
+            {#each events as item}
+                <Item
+                        on:SMUI:action={() => (selection = item.name)}
+                        disabled={item.disabled}
+                        selected={selection === item.name}
+                        style="height: 200px"
+                >
+                    <Image style="width: 200px"
+                           src="{item.imgUrl}"
+                           alt="Image {1}"
+                    />
+                    <Text>
+                        <PrimaryText>{item.name}</PrimaryText>
+                        <SecondaryText>{item.description}</SecondaryText>
+                    </Text>
+                    <Meta class="material-icons">info</Meta>
+                </Item>
+            {/each}
+        </List>
+    </div>
+
 </section>
 
 <style>
+
     section {
         display: flex;
         flex-direction: column;
