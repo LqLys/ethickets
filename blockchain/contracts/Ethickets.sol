@@ -119,6 +119,7 @@ contract Ethickets is Ownable {
         require(msg.value == ticket.price, "Incorrect amount sent");
 
         ticket.owner = msg.sender;
+        ticket.isForSale = false;
         (bool sent, bytes memory data) = payable(ticket.owner).call{value: msg.value}("");
         require(sent, "Failed to send Ether");
     }

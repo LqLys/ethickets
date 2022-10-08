@@ -6,6 +6,7 @@
     import {getAllEvents} from "../lib/clients/ethicketsAbiClient.js";
     import {contractAddress, abi} from "../lib/constants/constants.js";
     import {provider} from "../lib/stores/providerStore.js";
+    import {goto} from "$app/navigation";
 
     let options = [
         {
@@ -26,7 +27,6 @@
     ];
 
     let events = [];
-    let selection = 'Stephen Hawking';
     // This value is updated when the component is initialized, based on the
     // selected Item's `selected` prop.
     let selectionIndex = 0;
@@ -53,20 +53,19 @@
                 bind:selectedIndex={selectionIndex}
 
         >
-            {#each events as item}
+            {#each events as item (item.id)}
                 <Item
-                        on:SMUI:action={() => (selection = item.name)}
+                        on:click={async () => await goto(`/events/${item.id}`, {replaceState: false})}
                         disabled={item.disabled}
-                        selected={selection === item.name}
                         style="height: 200px"
                 >
                     <Image style="width: 200px"
                            src="{item.imgUrl}"
                            alt="Image {1}"
                     />
-                    <Text>
-                        <PrimaryText>{item.name}</PrimaryText>
-                        <SecondaryText>{item.description}</SecondaryText>
+                    <Text style="margin-left: 10px">
+                        <PrimaryText style="font-size: 1.5rem;">{item.name}</PrimaryText>
+                        <SecondaryText style="margin-top: 5px; height: 100px">{item.owner}</SecondaryText>
                     </Text>
                     <Meta class="material-icons">info</Meta>
                 </Item>

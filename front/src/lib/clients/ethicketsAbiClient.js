@@ -2,6 +2,8 @@
 import {selectedAccountEvents} from "../stores/eventStores.js";
 // import {provider} from '../stores/providerStore.js'
 import {ethers} from "ethers";
+import {abi, contractAddress} from "../constants/constants.js";
+import {provider} from "../stores/providerStore.js";
 
 let pro;
 
@@ -40,6 +42,70 @@ export async function getAllEvents(contractAddress, abi, provider) {
     try {
         const events = await contract.getEvents()
         return events;
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function getEventTickets(eventId, contractAddress, abi, provider) {
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const tickets = await contract.getEventTickets(eventId)
+        return tickets;
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider){
+
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const transaction = await contract.createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl);
+        const eventId = await transaction.wait();
+        console.log('eventId: ', eventId)
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function addTickets(eventId, ticketsAmount, ticketPrice, contractAddress, abi, provider){
+
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const transaction = await contract.addTicketsToEvent(eventId, ticketsAmount, ticketPrice);
+        await transaction.wait();
+        console.log('eventId: ', eventId)
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function buyTicket(eventId, ticketId, price, contractAddress, abi, provider){
+    const contract = getContract(contractAddress, abi, provider);
+
+    try {
+        const options = {
+            value: price
+        }
+        const transaction = await contract.buyTicket(eventId, ticketId, options);
+        await transaction.wait();
+
+    }catch (err) {
+        console.log(err);
+    }
+}
+
+export async function editTicket(eventId, ticketId, isForSale, price, contractAddress, abi, provider){
+
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const transaction = await contract.editTicketData(eventId, ticketId, isForSale, price);
+        await transaction.wait();
 
     } catch (err) {
         console.log(err)

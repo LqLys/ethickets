@@ -1,32 +1,23 @@
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
-    </Textfield>
+<div>
+<!--
+  Note: tabs must be unique. (They cannot === each other.)
+-->
+<TabBar tabs={['Event Info', 'Tickets']} let:tab bind:active>
+    <!-- Note: the `tab` property is required! -->
+    <Tab {tab}>
+        <TabLabel>{tab}</TabLabel>
+    </Tab>
+</TabBar>
+{#if active === 'Event Info'}
+<EventInfo event={event}/>
+{/if}
+{#if active === 'Tickets'}
+<TicketList/>
+{/if}
+
 </div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield style="width: 100%;" variant="outlined"
-               bind:value={eventDate}
-               label="Event Time"
-               type="datetime-local"
-    />
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
-               variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Button on:click={handleEventUpdate} variant="raised" style="width: 100%;">
-        <Label>Create Event</Label>
-    </Button>
-</div>
+
+
 
 <script>
     import { page } from '$app/stores';
@@ -38,6 +29,12 @@
     import {provider} from "../../../lib/stores/providerStore.js";
     import {selectedAccount} from "../../../lib/stores/selectedAccountStore.js";
     import {tick} from 'svelte';
+    import Tab, {Label as TabLabel,} from '@smui/tab';
+    import TabBar from '@smui/tab-bar';
+    import EventInfo from "../../EventInfo.svelte";
+    import TicketList from "../../TicketList.svelte";
+
+    let active = 'Event Info';
 
     let eventName = '';
     let eventDescription = '';
@@ -65,9 +62,6 @@
 
     })
 
-    function handleEventUpdate(){
-
-    }
 
 </script>
 <style>

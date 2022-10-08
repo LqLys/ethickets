@@ -14,6 +14,8 @@
 		"@material/typography": "^13.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
 		"@smui/button": "^6.1.4",
+		"@smui/card": "^6.1.4",
+		"@smui/checkbox": "^6.1.4",
 		"@smui/data-table": "^6.2.0",
 		"@smui/image-list": "^6.1.4",
 		"@smui/list": "^6.1.4",
@@ -31,6 +33,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@smui/form-field": "^6.1.4",
 		"ethers": "^5.7.1",
 		"rollup-plugin-polyfill-node": "^0.10.2",
 		"web3modal": "^1.9.9"

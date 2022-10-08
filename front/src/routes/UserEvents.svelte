@@ -59,7 +59,7 @@
     import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
     import {provider} from "../lib/stores/providerStore.js";
     import {onMount} from "svelte";
-    import {getContract} from "../lib/clients/ethicketsAbiClient.js";
+    import {createEvent, getContract} from "../lib/clients/ethicketsAbiClient.js";
     import {getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
     import {goto} from "$app/navigation";
     import {contractAddress, abi} from "../lib/constants/constants.js";
@@ -86,18 +86,9 @@
             const timestamp = date1.getTime();
             console.log(timestamp);
 
-            const contract = getContract(contractAddress, abi, $provider);
-
-            try {
-                const transaction = await contract.createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl);
-                const eventId = await transaction.wait();
-                console.log('eventId: ', eventId)
-                await getEventsByOwner(contractAddress, abi, $provider);
-                clearFormFields();
-                // selectedAccountEvents.update(e => [...e]);
-            } catch (err) {
-                console.log(err)
-            }
+            await createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, $provider)
+            clearFormFields();
+            await getEventsByOwner(contractAddress, abi, $provider);
         }
     }
 
