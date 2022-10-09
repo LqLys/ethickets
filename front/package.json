@@ -34,6 +34,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@smui/common": "^6.1.4",
+		"@smui/fab": "^6.1.4",
 		"@smui/form-field": "^6.1.4",
 		"ethers": "^5.7.1",
 		"moment": "^2.29.4",
