@@ -4,12 +4,10 @@
             twoLine
             avatarList
             singleSelection
-
-
     >
         {#each tickets as item (item.id)}
             {#if item.isForSale || item.owner.toLowerCase() === $selectedAccount.toLowerCase()}
-                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket}/>
+                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket} lockInFn={handleLockInTicket}/>
             {/if}
         {/each}
     </List>
@@ -34,7 +32,13 @@
 <script>
     import List, {Item,} from '@smui/list';
     import {onMount} from "svelte";
-    import {addTickets, buyTicket, editTicket, getEventTickets} from "../lib/clients/ethicketsAbiClient.js";
+    import {
+        addTickets,
+        buyTicket,
+        editTicket,
+        getEventTickets,
+        lockInTicket
+    } from "../lib/clients/ethicketsAbiClient.js";
     import {page} from "$app/stores";
     import {abi, contractAddress} from "../lib/constants/constants.js";
     import {provider} from "../lib/stores/providerStore.js";
@@ -67,8 +71,12 @@
     }
 
     async function handleEditTicket(ticketId, isForSale, price) {
-        console.log(isForSale);
         await editTicket($page.params.id, ticketId, isForSale, price, contractAddress, abi, $provider)
+        tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider);
+    }
+
+    async function handleLockInTicket(ticketId) {
+        await lockInTicket($page.params.id, ticketId, contractAddress, abi, $provider);
         tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider);
     }
 

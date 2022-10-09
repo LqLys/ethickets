@@ -111,3 +111,15 @@ export async function editTicket(eventId, ticketId, isForSale, price, contractAd
         console.log(err)
     }
 }
+
+export async function lockInTicket(eventId, ticketId, contractAddress, abi, provider){
+
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const transaction = await contract.lockInTicket(eventId, ticketId);
+        await transaction.wait();
+
+    } catch (err) {
+        console.log(err)
+    }
+}

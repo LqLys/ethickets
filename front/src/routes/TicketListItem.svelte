@@ -14,9 +14,11 @@
             </div>
             <ActionIcons>
                 {#if $selectedAccount.toLowerCase() === ticketData.owner.toLowerCase()}
+                    <Button on:click={() => lockInFn(ticketData.id)}>
+                        <Label style="white-space: nowrap">Lock in</Label>
+                    </Button>
                     <Button on:click={() => editFn(ticketData.id, checked, price)}>
                         <Label>Edit</Label>
-
                     </Button>
                     <FormField>
                         <Checkbox bind:checked touch />
@@ -58,6 +60,7 @@
     export let ticketData = {};
     export let buyFn;
     export let editFn;
+    export let lockInFn;
 
 
     let price = 0;
