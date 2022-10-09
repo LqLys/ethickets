@@ -123,3 +123,15 @@ export async function lockInTicket(eventId, ticketId, contractAddress, abi, prov
         console.log(err)
     }
 }
+
+export async function getTicketData(eventId, ticketId, contractAddress, abi, provider){
+
+    const contract = getContract(contractAddress, abi, provider);
+    try {
+        const ticketData = await contract.getTicketData(eventId, ticketId);
+        return ticketData;
+
+    } catch (err) {
+        console.log(err)
+    }
+}
