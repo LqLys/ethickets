@@ -74,7 +74,7 @@
                 <Item
                         on:click={async () => await goto(`/events/${item.id}`, {replaceState: false})}
                         disabled={item.disabled}
-                        style="height: 200px; width: 100%"
+                        style="height: 200px; width: 100%; padding: 0px"
                 >
                     <Image style="width: 200px"
                            src="{item.imgUrl}"
@@ -126,7 +126,8 @@
     }
 
     .solo-demo-container {
-        padding: 36px 18px;
+        padding-top: 8px;
+        padding-bottom: 8px;
         background-color: var(--mdc-theme-background, #f8f8f8);
         border: 1px solid var(--mdc-theme-text-hint-on-background, rgba(0, 0, 0, 0.1));
     }
