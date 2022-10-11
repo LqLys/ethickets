@@ -2,17 +2,25 @@
     import Card, {ActionButtons, ActionIcons, Actions, Content, Media, PrimaryAction,} from '@smui/card';
     import Button, {Label} from '@smui/button';
     import IconButton, {Icon} from '@smui/icon-button';
-    import Textfield from '@smui/textfield';
     import moment from 'moment';
-    import {onDestroy, onMount, tick} from "svelte";
+    import {afterUpdate, createEventDispatcher, onDestroy, onMount, tick} from "svelte";
     import LinearProgress from '@smui/linear-progress';
 
     import {page} from "$app/stores";
     import seedrandom from "seedrandom"
     import QRCode from 'qrcode';
+    import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
+    import {abi, contractAddress} from "../lib/constants/constants.js";
+    // import {provider} from "../lib/stores/providerStore.js";
+    import Textfield from "@smui/textfield";
+    import {canVerify} from "../lib/clients/ethicketsAbiClient.js";
+    import {provider} from "../lib/stores/providerStore.js";
+    import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
 
     let clicked = 0;
     export let event;
+    const changeTabDispatcher = createEventDispatcher();
+    let isVerifier;
     $: eventStyles = `background-image: url(${event?.imgUrl});`;
 
     let eventName = '';
@@ -23,7 +31,6 @@
     let qrcode = '';
 
     let timePeriod = getCode();
-    let encoded = seedrandom(timePeriod.toString())();
     let canvas;
     let refreshInterval;
     let progress = 0;
@@ -35,46 +42,40 @@
 
     $: hash = seedrandom(timePeriod.toString() + '_' + $page.params.id + ' ' + ticketId + '_' + saltCode)()
 
+
     onMount(async () => {
         await tick();
-        const path = $page.url.href
-        console.log('url')
-        console.log($page)
         refreshInterval = setInterval(async () => {
             verifyUrl = $page.url.origin + `/verify?e=${$page.params.id}&t=${ticketId}&s=${saltCode}`
             timePeriod = getCode();
-            encoded = seedrandom(timePeriod.toString())();
-            qrcode =  await generateQR(verifyUrl)
-            const pro = calculateProgress(timePeriod);
-            console.log('pro')
-            console.log(pro)
+            qrcode = await generateQR(verifyUrl)
             progress = calculateProgress(timePeriod);
-
-
-
-        }, 1000);
+        }, 100);
+        isVerifier = await canVerify($page.params.id, $selectedAccount, contractAddress, abi, $provider)
     })
 
-    onDestroy(async ()=> {
+    onDestroy(async () => {
         clearInterval(refreshInterval);
     })
+
+    function changeTab(){
+        changeTabDispatcher('changeTab', {
+            tabName: 'Tickets'
+        });
+    }
 
     function handleEventUpdate() {
 
     }
 
-    function calculateProgress(timePeriod){
-        console.log('time period is: ', timePeriod)
-        const unix = moment().unix();
-        console.log('unix is: ', unix)
+    function calculateProgress(timePeriod) {
         const diff = timePeriod - moment().toDate().getTime()
-        console.log('diff is: ', diff);
-        const progress = 1 - (diff/30/1000);
+        const progress = 1 - (diff / 30 / 1000);
         return progress;
     }
 
     const generateQR = async text => {
-        if(text) {
+        if (text) {
             try {
                 const qr = await QRCode.toDataURL(text);
                 return qr;
@@ -84,20 +85,21 @@
         }
     }
 
-        function getCode() {
-            const date = moment();
-            const code = round(date, moment.duration(30, 'seconds'), 'ceil')
-            return code;
-        }
+    function getCode() {
+        const date = moment();
+        const code = round(date, moment.duration(30, 'seconds'), 'ceil')
+        return code;
+    }
 
-        function round(date, duration, method) {
-            return moment(Math[method]((+date) / (+duration)) * (+duration));
-        }
+    function round(date, duration, method) {
+        return moment(Math[method]((+date) / (+duration)) * (+duration));
+    }
 </script>
 
 <style>
 
 </style>
+
 
 <Card>
     <PrimaryAction on:click={() => clicked++}>
@@ -117,12 +119,10 @@
     </PrimaryAction>
     <Actions>
         <ActionButtons>
-            <Button on:click={() => clicked++}>
-                <Label>Action</Label>
+            <Button on:click={changeTab}>
+                <Label>Buy ticket</Label>
             </Button>
-            <Button on:click={() => clicked++}>
-                <Label>Another</Label>
-            </Button>
+
         </ActionButtons>
         <ActionIcons>
             <IconButton
@@ -149,50 +149,76 @@
         </ActionIcons>
     </Actions>
 </Card>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
-    </Textfield>
+
+<div class="accordion-container">
+    <Accordion multiple>
+        {#if $selectedAccount.toLowerCase() === event?.owner?.toLowerCase()}
+        <Panel>
+            <Header style="text-align: center">Edit Event Info</Header>
+            <PanelContent>
+                <div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
+                        </Textfield>
+                    </div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
+                        </Textfield>
+                    </div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
+                        </Textfield>
+                    </div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Textfield style="width: 100%;" variant="outlined"
+                                   bind:value={eventDate}
+                                   label="Event Time"
+                                   type="datetime-local"
+                        />
+                    </div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
+                                   variant="outlined">
+                        </Textfield>
+                    </div>
+                    <div style="width: 100%; padding-bottom: 10px">
+                        <Button on:click={handleEventUpdate} variant="raised" style="width: 100%;">
+                            <Label>Edit Event</Label>
+                        </Button>
+                    </div>
+                </div>
+            </PanelContent>
+        </Panel>
+        {/if}
+        {#if isVerifier}
+        <Panel>
+            <Header style="text-align: center">Ticket Verification</Header>
+            <PanelContent>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield bind:value={ticketId} label="Ticket number" style="width: 100%;" variant="outlined">
+                    </Textfield>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield bind:value={saltCode} label="Verification Code" style="width: 100%;" variant="outlined">
+                    </Textfield>
+                </div>
+                <div>
+                    <LinearProgress {progress} {closed}/>
+                </div>
+                <img src="{qrcode}" style="height: 100px; width: 100px"/>
+                <a href="{verifyUrl}">Verify</a>
+                <div>
+                    {Math.trunc(hash * 10000)}
+                </div>
+            </PanelContent>
+        </Panel>
+        {/if}
+    </Accordion>
 </div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield style="width: 100%;" variant="outlined"
-               bind:value={eventDate}
-               label="Event Time"
-               type="datetime-local"
-    />
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
-               variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Button on:click={handleEventUpdate} variant="raised" style="width: 100%;">
-        <Label>Edit Event</Label>
-    </Button>
-</div>
-<h1>verify</h1>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={ticketId} label="Ticket number" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={saltCode} label="Verification Code" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div>
-    <LinearProgress {progress} {closed} />
-</div>
-<img src="{qrcode}" style="height: 100px; width: 100px"/>
-<a href="{verifyUrl}">Verify</a>
-<div>
-    {Math.trunc(hash * 10000)}
-</div>
-<!--<canvas bind:this={canvas} id="canvas"></canvas>-->
+
+
+
+
+
+
+

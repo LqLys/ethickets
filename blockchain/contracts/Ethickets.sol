@@ -17,6 +17,7 @@ contract Ethickets is Ownable {
         string location;
         string imgUrl;
         mapping(uint => Ticket) tickets;
+        mapping(address => bool) verifiers;
     }
 
     struct BasicEventInfo {
@@ -57,6 +58,7 @@ contract Ethickets is Ownable {
         newEvent.dateTime = _dateTime;
         newEvent.location = _location;
         newEvent.imgUrl = _imgUrl;
+        newEvent.verifiers[msg.sender] = true;
 
         return eventId;
     }
@@ -158,5 +160,15 @@ contract Ethickets is Ownable {
         }
         return counter;
     }
+
+    function setVerifier(uint _eventId, address _verifier, bool _canVerify) public onlyOwner {
+        events[_eventId].verifiers[_verifier] = _canVerify;
+    }
+
+    function canVerify(uint _eventId, address _verifier) public view returns(bool) {
+        return events[_eventId].verifiers[_verifier];
+    }
+
+
 
 }

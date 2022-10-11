@@ -13,14 +13,16 @@
 	let web3Provider;
 
 	onMount(async () => {
-		console.log('mount')
 		if (typeof window.ethereum === "undefined") {
 			setTimeout(() => {
 				alert("You need to have Metamask installed.");
 			}, 1000)
 		} else {
 			web3Provider = new ethers.providers.Web3Provider(window.ethereum, 'any');
-			provider.update(e => web3Provider);
+			provider.update(e => {
+				console.log('sending provider');
+				return web3Provider;
+			});
 
 			window.ethereum.on("chainChanged", handleChainChanged)
 			window.ethereum.on("accountsChanged", handleAccountsChanged)
@@ -58,10 +60,10 @@
 		// selectedAccount = null;
 		window.location.reload();
 	}
-
-	async function requestAccount() {
-		await window.ethereum.request({method: "eth_requestAccounts"});
-	}
+	//
+	// async function requestAccount() {
+	// 	await window.ethereum.request({method: "eth_requestAccounts"});
+	// }
 
 
 	const disconnectWallet = () => {

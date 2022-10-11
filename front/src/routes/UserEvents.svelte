@@ -79,12 +79,9 @@
     })
 
     async function handleCreateEvent() {
-        console.log('out')
         if (browser && typeof window.ethereum !== "undefined") {
-            console.log('in')
             const date1 = new Date(eventDate);
             const timestamp = date1.getTime();
-            console.log(timestamp);
 
             await createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, $provider)
             clearFormFields();
@@ -102,7 +99,7 @@
 
     async function getEvents() {
         if (browser && typeof window.ethereum !== "undefined") {
-            const contract = getContract(contractAddress, abi, provider);
+            const contract = await getContract(contractAddress, abi, provider);
             try {
                  const eventz = await contract.getEvents()
                 selectedAccountEvents.update( e => eventz);

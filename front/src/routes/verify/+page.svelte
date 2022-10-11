@@ -33,14 +33,12 @@
     $: hash = seedrandom(timePeriod.toString() + '_' + eventId + ' ' + tickedId + '_' + saltCode)()
 
     onMount(async () => {
-        console.log($page)
         eventId = $page.url.searchParams.get('e')
         tickedId = $page.url.searchParams.get('t')
         saltCode = $page.url.searchParams.get('s')
         refreshInterval = setInterval(async () => {
             timePeriod = getCode();
             progress = calculateProgress(timePeriod);
-            console.log(Math.trunc(hash * 10000))
         }, 1000);
         ticketData = await getTicketData(eventId, tickedId, contractAddress, abi, $provider);
     })
@@ -50,11 +48,7 @@
     })
 
     function calculateProgress(timePeriod) {
-        console.log('time period is: ', timePeriod)
-        const unix = moment().unix();
-        console.log('unix is: ', unix)
         const diff = timePeriod - moment().toDate().getTime()
-        console.log('diff is: ', diff);
         const progress = 1 - (diff / 30 / 1000);
         return progress;
     }

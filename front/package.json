@@ -13,6 +13,7 @@
 		"@fontsource/fira-mono": "^4.5.0",
 		"@material/typography": "^13.0.0",
 		"@neoconfetti/svelte": "^1.0.0",
+		"@smui-extra/accordion": "^6.1.4",
 		"@smui/button": "^6.1.4",
 		"@smui/card": "^6.1.4",
 		"@smui/checkbox": "^6.1.4",
