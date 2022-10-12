@@ -7,13 +7,13 @@
                         bind:group={priceUnit}
                         value={option.name}
                         disabled={option.disabled}
+                        on:click={() =>handlePriceUnitSelected(option.name)}
                 />
                 <span slot="label">
         {option.name}
       </span>
             </FormField>
         {/each}
-        {priceUnit}
     </div>
     <List
             class="demo-list"
@@ -61,19 +61,15 @@
     import {abi, contractAddress} from "../lib/constants/constants.js";
     import {provider} from "../lib/stores/providerStore.js";
     import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
-    import Card, {ActionButtons, ActionIcons, Actions, Content,} from '@smui/card';
-    import Checkbox from '@smui/checkbox';
-
+    import {selectedUnitPrice} from "../lib/stores/unitPriceStore.js";
     import Button, {Label} from '@smui/button';
     import Textfield from '@smui/textfield';
-    import {weiToEther} from "../lib/clients/utils";
     import TicketListItem from "./TicketListItem.svelte";
 
     let tickets = [];
 
     let ticketsAmount = 0;
     let ticketPrice = 0;
-    // let priceUnit = 'wei';
 
     let options = [
         {
@@ -109,6 +105,10 @@
     async function handleLockInTicket(ticketId) {
         await lockInTicket($page.params.id, ticketId, contractAddress, abi, $provider);
         tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider);
+    }
+
+    function handlePriceUnitSelected(unit){
+        selectedUnitPrice.update(e => unit);
     }
 
 </script>
