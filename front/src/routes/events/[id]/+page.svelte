@@ -9,7 +9,7 @@
         <EventInfo event={event} provider={provider} on:changeTab={handleChangeTab}/>
     {/if}
     {#if active === 'Tickets'}
-        <TicketList/>
+        <TicketList event="{event}"/>
     {/if}
 </div>
 

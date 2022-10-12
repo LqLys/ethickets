@@ -7,7 +7,7 @@
 
     let topAppBar;
 </script>
-<TopAppBar bind:this={topAppBar} variant="fixed">
+<TopAppBar style="background-color: #304a79" bind:this={topAppBar} variant="fixed">
     <Row>
         <Section>
             <IconButton class="material-icons">menu</IconButton>

@@ -1,6 +1,6 @@
 <div style="width: 100%">
     <div class="radio-demo">
-
+        Unit price:
         {#each options as option}
             <FormField>
                 <Radio
@@ -28,21 +28,40 @@
         {/each}
     </List>
 
-    <div style="width: 100%; padding-bottom: 10px">
-        <Textfield bind:value={ticketsAmount} type="number" label="Amount to add" style="width: 100%;"
-                   variant="outlined">
-        </Textfield>
-    </div>
-    <div style="width: 100%; padding-bottom: 10px">
-        <Textfield bind:value={ticketPrice} type="number" label="Price" style="width: 100%;" variant="outlined">
-        </Textfield>
+    <div class="accordion-container">
+        <Accordion multiple>
+            {#if $selectedAccount.toLowerCase() === event?.owner?.toLowerCase()}
+                <Panel bind:open={addTicketsPanelOpen}>
+                    <Header style="text-align: center">
+                        Add Tickets
+                        <IconButton slot="icon" toggle pressed={addTicketsPanelOpen}>
+                            <Icon class="material-icons" on>expand_less</Icon>
+                            <Icon class="material-icons">expand_more</Icon>
+                        </IconButton>
+                    </Header>
+                    <PanelContent>
+                        <div style="width: 100%; padding-bottom: 10px">
+                            <Textfield bind:value={ticketsAmount} type="number" label="Amount to add" style="width: 100%;"
+                                       variant="outlined">
+                            </Textfield>
+                        </div>
+                        <div style="width: 100%; padding-bottom: 10px">
+                            <Textfield bind:value={ticketPrice} type="number" label="Price" style="width: 100%;" variant="outlined">
+                            </Textfield>
+                        </div>
+
+                        <div style="width: 100%; padding-bottom: 10px">
+                            <Button on:click={handleAddTicketsToEvent} variant="raised" style="width: 100%;">
+                                <Label>Add tickets</Label>
+                            </Button>
+                        </div>
+                    </PanelContent>
+                </Panel>
+                {/if}
+        </Accordion>
     </div>
 
-    <div style="width: 100%; padding-bottom: 10px">
-        <Button on:click={handleAddTicketsToEvent} variant="raised" style="width: 100%;">
-            <Label>Add tickets</Label>
-        </Button>
-    </div>
+
 </div>
 
 <script>
@@ -65,11 +84,15 @@
     import Button, {Label} from '@smui/button';
     import Textfield from '@smui/textfield';
     import TicketListItem from "./TicketListItem.svelte";
+    import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
+    import IconButton, { Icon } from '@smui/icon-button'
 
+    export let event;
     let tickets = [];
 
     let ticketsAmount = 0;
     let ticketPrice = 0;
+    let addTicketsPanelOpen = false;
 
     let options = [
         {

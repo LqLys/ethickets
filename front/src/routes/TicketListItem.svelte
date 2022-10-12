@@ -1,6 +1,5 @@
-<Item style="height: 120px; margin-bottom: 5px; padding: 0px">
+<Item style="height: 80px; margin-bottom: 5px; padding: 0px">
     <Card style="width: 100%">
-        <Content>Current price: {weiToEther(ticketData.price)}, is for sale : {ticketData.isForSale}</Content>
         <Actions>
             <ActionButtons>
                 {#if $selectedAccount.toLowerCase() !== ticketData.owner.toLowerCase()}
@@ -14,21 +13,22 @@
             </div>
             <ActionIcons>
                 {#if $selectedAccount.toLowerCase() === ticketData.owner.toLowerCase()}
-                    <Button on:click={() => lockInFn(ticketData.id)}>
-                        <Label style="white-space: nowrap">Lock in</Label>
-                    </Button>
-                    <Button on:click={() => editFn(ticketData.id, checked, price)}>
-                        <Label>Edit</Label>
-                    </Button>
+
                     <FormField>
                         <Checkbox bind:checked touch />
-                        <span slot="label" style="white-space: nowrap; padding-right: 10px">for sale</span>
+                        <span slot="label" style="white-space: nowrap; padding-right: 10px">For Sale</span>
                     </FormField>
 
                     <Textfield value={displayPrice} on:input={e => price = e.target.value} type="number" label="Price"
                                style="width: 100%;"
                                variant="outlined">
                     </Textfield>
+                    <Button on:click={() => editFn(ticketData.id, checked, price)}>
+                        <Label>Save</Label>
+                    </Button>
+                    <Button on:click={() => lockInFn(ticketData.id)}>
+                        <Label style="white-space: nowrap">Lock in</Label>
+                    </Button>
                 {/if}
             </ActionIcons>
         </Actions>

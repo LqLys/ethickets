@@ -11,7 +11,6 @@
     import QRCode from 'qrcode';
     import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
     import {abi, contractAddress} from "../lib/constants/constants.js";
-    // import {provider} from "../lib/stores/providerStore.js";
     import Textfield from "@smui/textfield";
     import {canVerify} from "../lib/clients/ethicketsAbiClient.js";
     import {provider} from "../lib/stores/providerStore.js";
@@ -39,6 +38,9 @@
     let ticketId = 0;
     let saltCode = 0;
     let verifyUrl;
+
+    let editEventInfoOpen = false;
+    let verifyTicketOpen = false;
 
     $: hash = seedrandom(timePeriod.toString() + '_' + $page.params.id + ' ' + ticketId + '_' + saltCode)()
 
@@ -153,8 +155,14 @@
 <div class="accordion-container">
     <Accordion multiple>
         {#if $selectedAccount.toLowerCase() === event?.owner?.toLowerCase()}
-        <Panel>
-            <Header style="text-align: center">Edit Event Info</Header>
+        <Panel bind:open={editEventInfoOpen}>
+            <Header style="text-align: center">
+                Edit Event Info
+                <IconButton slot="icon" toggle pressed={editEventInfoOpen}>
+                    <Icon class="material-icons" on>expand_less</Icon>
+                    <Icon class="material-icons">expand_more</Icon>
+                </IconButton>
+            </Header>
             <PanelContent>
                 <div>
                     <div style="width: 100%; padding-bottom: 10px">
@@ -191,8 +199,14 @@
         </Panel>
         {/if}
         {#if isVerifier}
-        <Panel>
-            <Header style="text-align: center">Ticket Verification</Header>
+        <Panel bind:open={verifyTicketOpen}>
+            <Header style="text-align: center">
+                Ticket Verification
+                <IconButton slot="icon" toggle pressed={verifyTicketOpen}>
+                    <Icon class="material-icons" on>expand_less</Icon>
+                    <Icon class="material-icons">expand_more</Icon>
+                </IconButton>
+            </Header>
             <PanelContent>
                 <div style="width: 100%; padding-bottom: 10px">
                     <Textfield bind:value={ticketId} label="Ticket number" style="width: 100%;" variant="outlined">
