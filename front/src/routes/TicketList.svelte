@@ -1,4 +1,20 @@
 <div style="width: 100%">
+    <div class="radio-demo">
+
+        {#each options as option}
+            <FormField>
+                <Radio
+                        bind:group={priceUnit}
+                        value={option.name}
+                        disabled={option.disabled}
+                />
+                <span slot="label">
+        {option.name}
+      </span>
+            </FormField>
+        {/each}
+        {priceUnit}
+    </div>
     <List
             class="demo-list"
             twoLine
@@ -7,7 +23,7 @@
     >
         {#each tickets as item (item.id)}
             {#if item.isForSale || item.owner.toLowerCase() === $selectedAccount.toLowerCase()}
-                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket} lockInFn={handleLockInTicket}/>
+                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket} lockInFn={handleLockInTicket} priceUnit={priceUnit}/>
             {/if}
         {/each}
     </List>
@@ -39,6 +55,8 @@
         getEventTickets,
         lockInTicket
     } from "../lib/clients/ethicketsAbiClient.js";
+    import Radio from '@smui/radio';
+    import FormField from '@smui/form-field';
     import {page} from "$app/stores";
     import {abi, contractAddress} from "../lib/constants/constants.js";
     import {provider} from "../lib/stores/providerStore.js";
@@ -55,9 +73,22 @@
 
     let ticketsAmount = 0;
     let ticketPrice = 0;
+    // let priceUnit = 'wei';
+
+    let options = [
+        {
+            name: 'Ether',
+            disabled: false,
+        },
+        {
+            name: 'Wei',
+            disabled: false,
+        }
+    ];
+    let priceUnit = 'Ether';
 
     onMount(async () => {
-        tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider);
+        tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider)
     })
 
     async function handleAddTicketsToEvent() {

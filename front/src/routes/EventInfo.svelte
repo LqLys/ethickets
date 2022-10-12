@@ -205,11 +205,14 @@
                 <div>
                     <LinearProgress {progress} {closed}/>
                 </div>
-                <img src="{qrcode}" style="height: 100px; width: 100px"/>
-                <a href="{verifyUrl}">Verify</a>
-                <div>
-                    {Math.trunc(hash * 10000)}
+                <div style="display: flex; justify-content: center; flex-direction: column; align-items: center; padding-top: 10px; font-weight: 900">
+                    <div style="font-size: 2rem; font-family: Roboto sans-serif">{Math.trunc(hash * 10000)}</div>
+                    <div><img src="{qrcode}" style="height: 200px; width: 200px"/></div>
+                    <a href="{verifyUrl}">Verify</a>
                 </div>
+
+
+
             </PanelContent>
         </Panel>
         {/if}

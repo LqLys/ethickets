@@ -25,7 +25,7 @@
                         <span slot="label" style="white-space: nowrap; padding-right: 10px">for sale</span>
                     </FormField>
 
-                    <Textfield bind:value={price} type="number" label="Price"
+                    <Textfield value={formatDisplayPrice(price)} on:input={e => price = e.target.value} type="number" label="Price"
                                style="width: 100%;"
                                variant="outlined">
                     </Textfield>
@@ -61,6 +61,7 @@
     export let buyFn;
     export let editFn;
     export let lockInFn;
+    export let priceUnit
 
 
     let price = 0;
@@ -72,5 +73,13 @@
         price = ticketData.price;
         checked = ticketData.isForSale;
     })
+
+    function formatDisplayPrice(price){
+        if(priceUnit !== 'Wei'){
+            return weiToEther(price)
+        }
+        return price;
+
+    }
 
 </script>

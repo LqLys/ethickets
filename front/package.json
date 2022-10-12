@@ -22,6 +22,7 @@
 		"@smui/linear-progress": "^6.1.4",
 		"@smui/list": "^6.1.4",
 		"@smui/paper": "^6.1.4",
+		"@smui/radio": "^6.1.4",
 		"@smui/tab": "^6.1.4",
 		"@smui/tab-bar": "^6.1.4",
 		"@smui/textfield": "^6.1.4",
