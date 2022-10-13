@@ -5,12 +5,18 @@
             <TabLabel>{tab}</TabLabel>
         </Tab>
     </TabBar>
-    {#if active === 'Event Info'}
-        <EventInfo event={event} provider={provider} on:changeTab={handleChangeTab}/>
-    {/if}
-    {#if active === 'Tickets'}
-        <TicketList event="{event}"/>
-    {/if}
+    {#await eventPromise}
+        Loading...
+    {:then event}
+        {#if active === 'Event Info'}
+            <EventInfo event={event} on:changeTab={handleChangeTab}/>
+        {/if}
+        {#if active === 'Tickets'}
+            <TicketList event="{event}"/>
+        {/if}
+    {:catch error}
+        Something went wrong...
+    {/await}
 </div>
 
 
@@ -26,10 +32,10 @@
     import TicketList from "../../TicketList.svelte";
 
     let active = 'Event Info';
-    let event;
+    let eventPromise;
 
     onMount(async () => {
-        event = await getEventById($page.params.id, contractAddress, abi, $provider)
+        eventPromise = getEventById($page.params.id, contractAddress, abi, $provider)
     })
 
     function handleChangeTab() {

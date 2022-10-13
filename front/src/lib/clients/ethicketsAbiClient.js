@@ -29,6 +29,7 @@ export async function getEventsByOwner(contractAddress, abi, provider) {
 }
 
 export async function getEventById(eventId, contractAddress, abi, provider) {
+
     const contract = await getContract(contractAddress, abi, provider);
     try {
         const event = await contract.events(eventId)
@@ -144,6 +145,18 @@ export async function canVerify(eventId, address, contractAddress, abi, provider
     try {
         const res = await contract.canVerify(eventId, address);
         return res;
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+export async function editEventData(eventId, eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider){
+
+    const contract = await getContract(contractAddress, abi, provider);
+    try {
+        const transaction = await contract.editEventData(eventId, eventName, eventDescription, timestamp, eventLocation, imgUrl);
+        await transaction.wait();
 
     } catch (err) {
         console.log(err)

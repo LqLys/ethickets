@@ -136,6 +136,44 @@ export const abi =  [
                 "type": "uint256"
             },
             {
+                "internalType": "string",
+                "name": "_name",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_description",
+                "type": "string"
+            },
+            {
+                "internalType": "uint256",
+                "name": "_dateTime",
+                "type": "uint256"
+            },
+            {
+                "internalType": "string",
+                "name": "_location",
+                "type": "string"
+            },
+            {
+                "internalType": "string",
+                "name": "_imgUrl",
+                "type": "string"
+            }
+        ],
+        "name": "editEventData",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "uint256",
+                "name": "_eventId",
+                "type": "uint256"
+            },
+            {
                 "internalType": "uint256",
                 "name": "_ticketId",
                 "type": "uint256"

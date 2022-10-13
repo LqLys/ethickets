@@ -15,6 +15,7 @@
     import {canVerify} from "../lib/clients/ethicketsAbiClient.js";
     import {provider} from "../lib/stores/providerStore.js";
     import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
+    import {editEventData} from "../lib/clients/ethicketsAbiClient.js";
 
     let clicked = 0;
     export let event;
@@ -44,9 +45,9 @@
 
     $: hash = seedrandom(timePeriod.toString() + '_' + $page.params.id + ' ' + ticketId + '_' + saltCode)()
 
-
     onMount(async () => {
         await tick();
+
         refreshInterval = setInterval(async () => {
             verifyUrl = $page.url.origin + `/verify?e=${$page.params.id}&t=${ticketId}&s=${saltCode}`
             timePeriod = getCode();
@@ -54,6 +55,11 @@
             progress = calculateProgress(timePeriod);
         }, 100);
         isVerifier = await canVerify($page.params.id, $selectedAccount, contractAddress, abi, $provider)
+        eventName = event?.name;
+        eventDescription = event?.description;
+        eventDate = new Date(event?.dateTime.toNumber()).toISOString().substring(0,16);
+        eventLocation = event?.location;
+        imgUrl = event?.imgUrl;
     })
 
     onDestroy(async () => {
@@ -66,8 +72,9 @@
         });
     }
 
-    function handleEventUpdate() {
-
+    async function handleEventUpdate() {
+        const timestamp = new Date(eventDate).getTime();
+        await editEventData(event.id, eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, $provider)
     }
 
     function calculateProgress(timePeriod) {

@@ -169,6 +169,15 @@ contract Ethickets is Ownable {
         return events[_eventId].verifiers[_verifier];
     }
 
+    function editEventData(uint _eventId, string memory _name, string memory _description, uint _dateTime, string memory _location, string memory _imgUrl) public {
+        Event storage newEvent = events[_eventId];
+        newEvent.name = _name;
+        newEvent.description = _description;
+        newEvent.dateTime = _dateTime;
+        newEvent.location = _location;
+        newEvent.imgUrl = _imgUrl;
+    }
+
 
 
 }
