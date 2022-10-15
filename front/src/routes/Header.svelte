@@ -1,34 +1,56 @@
 <script>
     import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
-    import Paper, {Content} from '@smui/paper';
     import TopAppBar, {AutoAdjust, Row, Section, Title as NavTitle,} from '@smui/top-app-bar';
-    import IconButton from '@smui/icon-button';
-    // import LoremIpsum from '$lib/LoremIpsum.svelte';
+    import List, {Item, Text} from '@smui/list';
+    import IconButton from "@smui/icon-button";
+    import {goto} from "$app/navigation";
 
+
+    let innerWidth = 0;
     let topAppBar;
+    let menuOpen = false;
+    let menu;
+    let clicked;
+    $: displayAccount = innerWidth > 700 ? $selectedAccount : formatDisplayAccount($selectedAccount);
+
+    function formatDisplayAccount(acc){
+        const start = acc.slice(0, 10);
+        const end = acc.slice(-8);
+        return start + '...' + end;
+    }
 </script>
-<TopAppBar style="background-color: #304a79" bind:this={topAppBar} variant="fixed">
+<svelte:window bind:innerWidth={innerWidth}/>
+
+<TopAppBar style="background-color: #304a79" bind:this={topAppBar} variant="static">
+
     <Row>
         <Section>
-            <IconButton class="material-icons">menu</IconButton>
-            <ul>
-                <NavTitle>
-                    <a href="/">Home</a>
-                </NavTitle>
-                <NavTitle>
-                    <a href="/events">Events</a>
-                </NavTitle>
-                <NavTitle>
-                    <a href="/verify">Verify</a>
-                </NavTitle>
-            </ul>
+            {#if innerWidth <= 500  }
+                <div>
+                    <IconButton on:click={() => menuOpen = !menuOpen} class="material-icons">menu</IconButton>
+                </div>
+
+            {/if}
+            {#if innerWidth > 500}
+                <ul>
+                    <NavTitle>
+                        <a href="/">Home</a>
+                    </NavTitle>
+                    <NavTitle>
+                        <a href="/events">Events</a>
+                    </NavTitle>
+                    <NavTitle>
+                        <a href="/verify">Verify</a>
+                    </NavTitle>
+                </ul>
+            {/if}
             <!--            <NavTitle>Fixed</NavTitle>-->
             <!--            <NavTitle>Fixed</NavTitle>-->
             <!--            <NavTitle>Fixed</NavTitle>-->
         </Section>
         <Section align="end" toolbar>
             {#if $selectedAccount}
-                <div style="font-weight: 700">{$selectedAccount}</div>
+                <div style="font-weight: 700">{displayAccount}</div>
             {/if}
             <!--                        <IconButton class="material-icons" aria-label="Download"-->
             <!--                        >file_download-->
@@ -53,6 +75,24 @@
     <!--            style="display: block; max-width: 100%; height: auto; margin: 1em auto;"-->
     <!--    />-->
 </AutoAdjust>
+{#if menuOpen && innerWidth <= 900}
+    <div style="width: 100%; background-color: #ff3e00;">
+        <List>
+            <Item on:click={() => goto('/')} style="display: flex; justify-content: center; font-weight: 700; color: white">
+                <Text>Home</Text>
+            </Item>
+            <Item on:click={() => goto('/events')} style="display: flex; justify-content: center; font-weight: 700; color: white">
+                <Text>Events</Text>
+            </Item>
+            <Item on:click={() => goto('/verify')} style="display: flex; justify-content: center; font-weight: 700; color: white">
+                <Text>Verify</Text>
+            </Item>
+        </List>
+    </div>
+{/if}
+<!--{#if $selectedAccount}-->
+
+<!--{/if}-->
 <header>
     <!--    <div class="corner">-->
     <!--        <a href="https://kit.svelte.dev">-->

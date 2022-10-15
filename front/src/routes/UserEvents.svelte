@@ -65,6 +65,7 @@
     import {contractAddress, abi} from "../lib/constants/constants.js";
 
 
+
     // export let provider;
 
     let eventName = '';

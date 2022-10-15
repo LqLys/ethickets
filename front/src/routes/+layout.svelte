@@ -86,7 +86,7 @@
 <div class="app">
 	<Header />
 
-	<main>
+	<main >
 		{#if !$selectedAccount}
 			<div style="padding-bottom: 10px">
 				<Button on:click={handleConnectWallet} variant="raised" style="width: 100%;">
@@ -138,5 +138,9 @@
 		footer {
 			padding: 12px 0;
 		}
+	}
+
+	.justifyCenter {
+		justify-content: center;
 	}
 </style>

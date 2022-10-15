@@ -40,6 +40,10 @@
     let saltCode = 0;
     let verifyUrl;
 
+    $: {
+        console.log(verifyUrl)
+    }
+
     let editEventInfoOpen = false;
     let verifyTicketOpen = false;
 
@@ -57,7 +61,9 @@
         isVerifier = await canVerify($page.params.id, $selectedAccount, contractAddress, abi, $provider)
         eventName = event?.name;
         eventDescription = event?.description;
-        eventDate = new Date(event?.dateTime.toNumber()).toISOString().substring(0,16);
+        const tm = new Date(event?.dateTime?.toNumber())?.toISOString().substring(0,16);
+        console.log(tm)
+        eventDate = tm;
         eventLocation = event?.location;
         imgUrl = event?.imgUrl;
     })
