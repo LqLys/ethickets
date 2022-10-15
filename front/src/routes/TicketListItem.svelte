@@ -19,7 +19,7 @@
                         <span slot="label" style="white-space: nowrap; padding-right: 10px">For Sale</span>
                     </FormField>
 
-                    <Textfield value={displayPrice} on:input={e => price = e.target.value} type="number" label="Price"
+                    <Textfield value={displayPrice} on:input={e => price = asWei(e.target.value)} type="text" label="Price"
                                style="width: 100%;"
                                variant="outlined">
                     </Textfield>
@@ -52,6 +52,7 @@
     import Checkbox from '@smui/checkbox';
     import FormField from '@smui/form-field';
     import {selectedUnitPrice} from "../lib/stores/unitPriceStore.js";
+    import {formatDisplayPrice, asWei} from "../lib/clients/utils.js";
 
     import Button, {Label} from '@smui/button';
     import Textfield from '@smui/textfield';
@@ -76,11 +77,6 @@
         checked = ticketData.isForSale;
     })
 
-    function formatDisplayPrice(price, unit){
-        if(unit !== 'Wei'){
-            return weiToEther(price)
-        }
-        return price;
-    }
+
 
 </script>

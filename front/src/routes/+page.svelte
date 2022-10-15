@@ -49,7 +49,7 @@
             <Input
                     bind:value={searchValue}
                     on:keydown={handleKeyDown}
-                    placeholder="Search"
+                    placeholder="Search for event"
                     class="solo-input"
             />
         </Paper>

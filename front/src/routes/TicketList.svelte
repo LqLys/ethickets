@@ -46,7 +46,7 @@
                             </Textfield>
                         </div>
                         <div style="width: 100%; padding-bottom: 10px">
-                            <Textfield bind:value={ticketPrice} type="number" label="Price" style="width: 100%;" variant="outlined">
+                            <Textfield value={displayTicketPrice} on:input={e => ticketPrice = asWei(e.target.value, $selectedUnitPrice)} type="text" label="Price" style="width: 100%;" variant="outlined">
                             </Textfield>
                         </div>
 
@@ -86,12 +86,15 @@
     import TicketListItem from "./TicketListItem.svelte";
     import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
     import IconButton, { Icon } from '@smui/icon-button'
+    import {formatDisplayPrice, asWei} from "../lib/clients/utils.js";
 
     export let event;
     let tickets = [];
 
     let ticketsAmount = 0;
     let ticketPrice = 0;
+    $: displayTicketPrice = formatDisplayPrice(ticketPrice, $selectedUnitPrice)
+
     let addTicketsPanelOpen = false;
 
     let options = [
@@ -133,5 +136,4 @@
     function handlePriceUnitSelected(unit){
         selectedUnitPrice.update(e => unit);
     }
-
 </script>
