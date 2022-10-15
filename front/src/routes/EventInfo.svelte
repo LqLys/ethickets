@@ -170,7 +170,7 @@
         {#if $selectedAccount.toLowerCase() === event?.owner?.toLowerCase()}
         <Panel bind:open={editEventInfoOpen}>
             <Header style="text-align: center">
-                Edit Event Info
+                <span>Edit Event Info</span>
                 <IconButton slot="icon" toggle pressed={editEventInfoOpen}>
                     <Icon class="material-icons" on>expand_less</Icon>
                     <Icon class="material-icons">expand_more</Icon>

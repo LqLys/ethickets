@@ -1,32 +1,49 @@
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield style="width: 100%;" variant="outlined"
-               bind:value={eventDate}
-               label="Event Time"
-               type="datetime-local"
-    />
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
-               variant="outlined">
-    </Textfield>
-</div>
-<div style="width: 100%; padding-bottom: 10px">
-    <Button on:click={handleCreateEvent} variant="raised" style="width: 100%;">
-        <Label>Create Event</Label>
-    </Button>
-</div>
+<Accordion multiple>
+    <Panel bind:open={createEventOpen}>
+            <Header style="text-align: center">
+                <span style="position:absolute;">Create Event</span>
+                <IconButton slot="icon" toggle pressed={createEventOpen}>
+                    <Icon class="material-icons" on>expand_less</Icon>
+                    <Icon class="material-icons">expand_more</Icon>
+                </IconButton>
+            </Header>
+            <PanelContent>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
+                    </Textfield>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
+                    </Textfield>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
+                    </Textfield>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield style="width: 100%;" variant="outlined"
+                               bind:value={eventDate}
+                               label="Event Time"
+                               type="datetime-local"
+                    />
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
+                               variant="outlined">
+                    </Textfield>
+                </div>
+                <div style="width: 100%; padding-bottom: 10px">
+                    <Button on:click={handleCreateEvent} variant="raised" style="width: 100%;">
+                        <Label>Create Event</Label>
+                    </Button>
+                </div>
+            </PanelContent>
+        </Panel>
+
+</Accordion>
+
+
+
 <div style="width: 100%">
     <DataTable table$aria-label="People list" style="width: 100%;">
         <Head>
@@ -63,11 +80,13 @@
     import {getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
     import {goto} from "$app/navigation";
     import {contractAddress, abi} from "../lib/constants/constants.js";
+    import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
+    import IconButton, {Icon} from '@smui/icon-button';
 
 
 
     // export let provider;
-
+    let createEventOpen = false;
     let eventName = '';
     let eventDescription = '';
     let eventDate = '';

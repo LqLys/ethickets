@@ -1,13 +1,17 @@
-<Item style="height: 80px; margin-bottom: 5px; padding: 0px">
+<Item style="height: 80px; margin-bottom: 5px; padding: 0px;">
     <Card style="width: 100%">
-        <Actions>
-            <ActionButtons>
-                {#if $selectedAccount.toLowerCase() !== ticketData.owner.toLowerCase()}
+        <Actions>{#if $selectedAccount.toLowerCase() !== ticketData.owner.toLowerCase()}
+            <ActionButtons style="width: 100%">
+                    <span style="font-weight: 700">Price: </span>
+                    <div style="width: 100%; text-align: center; font-weight: 700" >
+                        {displayPrice}
+                    </div>
                     <Button on:click={() => buyFn(ticketData.id, price)}>
                         <Label>Buy</Label>
                     </Button>
-                {/if}
+
             </ActionButtons>
+        {/if}
             <div>
 
             </div>

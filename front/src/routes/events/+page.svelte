@@ -3,13 +3,13 @@
         <!--
           Note: tabs must be unique. (They cannot === each other.)
         -->
-        <TabBar tabs={['Events', 'Tickets']} let:tab bind:active>
+        <TabBar tabs={['Your Events']} let:tab bind:active>
             <!-- Note: the `tab` property is required! -->
             <Tab {tab}>
                 <TabLabel>{tab}</TabLabel>
             </Tab>
         </TabBar>
-        {#if active === 'Events'}
+        {#if active === 'Your Events'}
             <UserEvents />
         {/if}
         <!--{#if active === 'Tickets'}-->
@@ -34,7 +34,7 @@
 
 
 
-    let active = 'Events';
+    let active = 'Your Events';
 
     let eventName = '';
     let eventDescription = '';
@@ -43,10 +43,6 @@
     let imgUrl = '';
 
 
-    let allEvents = [];
-    $: {
-        console.log(allEvents)
-    }
 
 
 </script>
