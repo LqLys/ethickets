@@ -21,6 +21,7 @@
     export let event;
     const changeTabDispatcher = createEventDispatcher();
     let isVerifier;
+    $: ver = $selectedAccount
     $: eventStyles = `background-image: url(${event?.imgUrl});`;
 
     let eventName = '';
@@ -48,6 +49,12 @@
     let verifyTicketOpen = false;
 
     $: hash = seedrandom(timePeriod.toString() + '_' + $page.params.id + ' ' + ticketId + '_' + saltCode)()
+    $: {
+        canVerify($page.params.id, $selectedAccount, contractAddress, abi, $provider)
+            .then(res => {
+                isVerifier = res;
+            })
+    }
 
     onMount(async () => {
         await tick();
