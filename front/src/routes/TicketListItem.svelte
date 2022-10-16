@@ -10,20 +10,14 @@
                     <Button on:click={() => buyFn(ticketData.id, price)}>
                         <Label>Buy</Label>
                     </Button>
-
                 </ActionButtons>
             {/if}
-            <div>
-
-            </div>
             <ActionIcons>
                 {#if $selectedAccount.toLowerCase() === ticketData.owner.toLowerCase()}
-
                     <FormField>
                         <Checkbox bind:checked touch/>
                         <span slot="label" style="white-space: nowrap; padding-right: 10px">For Sale</span>
                     </FormField>
-
                     <Textfield value={displayPrice} on:input={e => price = asWei(e.target.value)} type="text"
                                label="Price"
                                style="width: 100%;"
@@ -39,11 +33,6 @@
             </ActionIcons>
         </Actions>
     </Card>
-    <!--                <Text style="margin-left: 10px">-->
-    <!--                    <PrimaryText style="font-size: 1.5rem;">{item.price}</PrimaryText>-->
-    <!--                    <SecondaryText style="margin-top: 5px; height: 100px">{item.owner}</SecondaryText>-->
-    <!--                </Text>-->
-    <!--                <Meta class="material-icons">info</Meta>-->
 </Item>
 
 <script>
@@ -65,7 +54,6 @@
     export let buyFn;
     export let editFn;
     export let lockInFn;
-    export let priceUnit
 
 
     let price = 0;
@@ -78,6 +66,4 @@
         price = ticketData.price;
         checked = ticketData.isForSale;
     })
-
-
 </script>

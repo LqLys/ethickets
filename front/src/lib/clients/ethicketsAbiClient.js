@@ -5,8 +5,6 @@ import {ethers} from "ethers";
 // import {provider} from "../stores/providerStore.js";
 
 export const getContract = async (contractAddress, abi, provider) => {
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    console.log('provider')
     console.log(provider?.getSigner())
     const signer = await provider?.getSigner();
     return new ethers.Contract(contractAddress, abi, signer);

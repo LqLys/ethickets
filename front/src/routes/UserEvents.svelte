@@ -80,16 +80,12 @@
     import IconButton, {Icon} from '@smui/icon-button';
 
 
-    // export let provider;
     let createEventOpen = false;
     let eventName = '';
     let eventDescription = '';
     let eventDate = '';
     let eventLocation = '';
     let imgUrl = '';
-    $: async ($selectedAccount) => {
-        await getEventsByOwner(contractAddress, abi, $provider);
-    }
 
     onMount(async () => {
         await getEventsByOwner(contractAddress, abi, $provider);

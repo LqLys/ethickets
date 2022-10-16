@@ -177,7 +177,4 @@ contract Ethickets is Ownable {
         newEvent.location = _location;
         newEvent.imgUrl = _imgUrl;
     }
-
-
-
 }

@@ -31,7 +31,6 @@
             </FormField>
         {/each}
     </div>
-
     <List
             class="demo-list"
             twoLine
@@ -45,7 +44,6 @@
             {/if}
         {/each}
     </List>
-
     <div class="accordion-container">
         <Accordion multiple>
             {#if $selectedAccount.toLowerCase() === event?.owner?.toLowerCase()}
@@ -81,8 +79,6 @@
             {/if}
         </Accordion>
     </div>
-
-
 </div>
 
 <script>
