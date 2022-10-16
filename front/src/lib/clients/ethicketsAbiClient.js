@@ -2,7 +2,6 @@
 import {selectedAccountEvents} from "../stores/eventStores.js";
 // import {provider} from '../stores/providerStore.js'
 import {ethers} from "ethers";
-import {abi, contractAddress} from "../constants/constants.js";
 // import {provider} from "../stores/providerStore.js";
 
 export const getContract = async (contractAddress, abi, provider) => {
@@ -58,7 +57,7 @@ export async function getEventTickets(eventId, contractAddress, abi, provider) {
     }
 }
 
-export async function createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider){
+export async function createEvent(eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -71,7 +70,7 @@ export async function createEvent(eventName, eventDescription, timestamp, eventL
     }
 }
 
-export async function addTickets(eventId, ticketsAmount, ticketPrice, contractAddress, abi, provider){
+export async function addTickets(eventId, ticketsAmount, ticketPrice, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -84,7 +83,7 @@ export async function addTickets(eventId, ticketsAmount, ticketPrice, contractAd
     }
 }
 
-export async function buyTicket(eventId, ticketId, price, contractAddress, abi, provider){
+export async function buyTicket(eventId, ticketId, price, contractAddress, abi, provider) {
     const contract = await getContract(contractAddress, abi, provider);
 
     try {
@@ -94,12 +93,12 @@ export async function buyTicket(eventId, ticketId, price, contractAddress, abi, 
         const transaction = await contract.buyTicket(eventId, ticketId, options);
         await transaction.wait();
 
-    }catch (err) {
+    } catch (err) {
         console.log(err);
     }
 }
 
-export async function editTicket(eventId, ticketId, isForSale, price, contractAddress, abi, provider){
+export async function editTicket(eventId, ticketId, isForSale, price, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -111,7 +110,7 @@ export async function editTicket(eventId, ticketId, isForSale, price, contractAd
     }
 }
 
-export async function lockInTicket(eventId, ticketId, contractAddress, abi, provider){
+export async function lockInTicket(eventId, ticketId, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -123,7 +122,7 @@ export async function lockInTicket(eventId, ticketId, contractAddress, abi, prov
     }
 }
 
-export async function getTicketData(eventId, ticketId, contractAddress, abi, provider){
+export async function getTicketData(eventId, ticketId, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -135,7 +134,7 @@ export async function getTicketData(eventId, ticketId, contractAddress, abi, pro
     }
 }
 
-export async function canVerify(eventId, address, contractAddress, abi, provider){
+export async function canVerify(eventId, address, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {
@@ -147,7 +146,7 @@ export async function canVerify(eventId, address, contractAddress, abi, provider
     }
 }
 
-export async function editEventData(eventId, eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider){
+export async function editEventData(eventId, eventName, eventDescription, timestamp, eventLocation, imgUrl, contractAddress, abi, provider) {
 
     const contract = await getContract(contractAddress, abi, provider);
     try {

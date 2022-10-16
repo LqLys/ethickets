@@ -1,13 +1,10 @@
-
-
-
 <div>
     <div>
         <LinearProgress {progress} {closed}/>
     </div>
     <div class="card-container">
         <Card>
-            <div style="padding: 1rem; text-align: center" >
+            <div style="padding: 1rem; text-align: center">
                 <h2 class="mdc-typography--headline6" style="margin: 0; font-weight: 700">
                     {#if $selectedAccount?.toLowerCase() === ticketData?.owner?.toLowerCase()}
                         You own this ticket
@@ -20,7 +17,8 @@
                 </h3>
             </div>
             <PrimaryAction>
-                <Media class="card-media-16x9" aspectRatio="16x9"  style="background-size: contain; background-image: url({mediaUrl})"/>
+                <Media class="card-media-16x9" aspectRatio="16x9"
+                       style="background-size: contain; background-image: url({mediaUrl})"/>
                 <Content class="mdc-typography--body2" style="text-align: center">
                     Ticker owner: {ticketData?.owner}
                 </Content>
@@ -32,12 +30,7 @@
 <script>
     import {page} from "$app/stores";
     import {onDestroy, onMount} from "svelte";
-    import Card, {
-        Content,
-        PrimaryAction,
-        Media,
-        MediaContent,
-    } from '@smui/card';
+    import Card, {Content, Media, PrimaryAction,} from '@smui/card';
     import moment from "moment";
     import seedrandom from "seedrandom";
     import LinearProgress from "@smui/linear-progress";
@@ -73,14 +66,12 @@
 
     function calculateProgress(timePeriod) {
         const diff = timePeriod - moment().toDate().getTime()
-        const progress = 1 - (diff / 30 / 1000);
-        return progress;
+        return 1 - (diff / 30 / 1000);
     }
 
     function getCode() {
         const date = moment();
-        const code = round(date, moment.duration(30, 'seconds'), 'ceil')
-        return code;
+        return round(date, moment.duration(30, 'seconds'), 'ceil');
     }
 
     function round(date, duration, method) {

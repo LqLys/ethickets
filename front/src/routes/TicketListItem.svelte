@@ -1,17 +1,18 @@
 <Item style="height: 80px; margin-bottom: 5px; padding: 0px;">
     <Card style="width: 100%">
-        <Actions>{#if $selectedAccount.toLowerCase() !== ticketData.owner.toLowerCase()}
-            <ActionButtons style="width: 100%">
+        <Actions>
+            {#if $selectedAccount.toLowerCase() !== ticketData.owner.toLowerCase()}
+                <ActionButtons style="width: 100%">
                     <span style="font-weight: 700">Price: </span>
-                    <div style="width: 100%; text-align: center; font-weight: 700" >
+                    <div style="width: 100%; text-align: center; font-weight: 700">
                         {displayPrice}
                     </div>
                     <Button on:click={() => buyFn(ticketData.id, price)}>
                         <Label>Buy</Label>
                     </Button>
 
-            </ActionButtons>
-        {/if}
+                </ActionButtons>
+            {/if}
             <div>
 
             </div>
@@ -19,11 +20,12 @@
                 {#if $selectedAccount.toLowerCase() === ticketData.owner.toLowerCase()}
 
                     <FormField>
-                        <Checkbox bind:checked touch />
+                        <Checkbox bind:checked touch/>
                         <span slot="label" style="white-space: nowrap; padding-right: 10px">For Sale</span>
                     </FormField>
 
-                    <Textfield value={displayPrice} on:input={e => price = asWei(e.target.value)} type="text" label="Price"
+                    <Textfield value={displayPrice} on:input={e => price = asWei(e.target.value)} type="text"
+                               label="Price"
                                style="width: 100%;"
                                variant="outlined">
                     </Textfield>
@@ -45,22 +47,18 @@
 </Item>
 
 <script>
-    import List, {Item,} from '@smui/list';
+    import {Item,} from '@smui/list';
     import {onMount} from "svelte";
-    import {addTickets, buyTicket, getEventTickets} from "../lib/clients/ethicketsAbiClient.js";
-    import {page} from "$app/stores";
-    import {abi, contractAddress} from "../lib/constants/constants.js";
-    import {provider} from "../lib/stores/providerStore.js";
     import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
-    import Card, {ActionButtons, ActionIcons, Actions, Content,} from '@smui/card';
+    import Card, {ActionButtons, ActionIcons, Actions,} from '@smui/card';
     import Checkbox from '@smui/checkbox';
     import FormField from '@smui/form-field';
     import {selectedUnitPrice} from "../lib/stores/unitPriceStore.js";
-    import {formatDisplayPrice, asWei} from "../lib/clients/utils.js";
+    import {asWei, formatDisplayPrice} from "../lib/clients/utils.js";
 
     import Button, {Label} from '@smui/button';
     import Textfield from '@smui/textfield';
-    import {etherToWei, weiToEther} from "../lib/clients/utils";
+    import {weiToEther} from "../lib/clients/utils";
 
 
     export let ticketData = {};
@@ -80,7 +78,6 @@
         price = ticketData.price;
         checked = ticketData.isForSale;
     })
-
 
 
 </script>

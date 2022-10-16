@@ -1,47 +1,46 @@
 <Accordion multiple>
     <Panel bind:open={createEventOpen}>
-            <Header style="text-align: center">
-                <span style="position:absolute;">Create Event</span>
-                <IconButton slot="icon" toggle pressed={createEventOpen}>
-                    <Icon class="material-icons" on>expand_less</Icon>
-                    <Icon class="material-icons">expand_more</Icon>
-                </IconButton>
-            </Header>
-            <PanelContent>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
-                    </Textfield>
-                </div>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
-                    </Textfield>
-                </div>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
-                    </Textfield>
-                </div>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Textfield style="width: 100%;" variant="outlined"
-                               bind:value={eventDate}
-                               label="Event Time"
-                               type="datetime-local"
-                    />
-                </div>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
-                               variant="outlined">
-                    </Textfield>
-                </div>
-                <div style="width: 100%; padding-bottom: 10px">
-                    <Button on:click={handleCreateEvent} variant="raised" style="width: 100%;">
-                        <Label>Create Event</Label>
-                    </Button>
-                </div>
-            </PanelContent>
-        </Panel>
+        <Header style="text-align: center">
+            <span style="position:absolute;">Create Event</span>
+            <IconButton slot="icon" toggle pressed={createEventOpen}>
+                <Icon class="material-icons" on>expand_less</Icon>
+                <Icon class="material-icons">expand_more</Icon>
+            </IconButton>
+        </Header>
+        <PanelContent>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Textfield bind:value={eventName} label="Name" style="width: 100%;" variant="outlined">
+                </Textfield>
+            </div>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Textfield bind:value={eventLocation} label="Location" style="width: 100%;" variant="outlined">
+                </Textfield>
+            </div>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Textfield bind:value={imgUrl} label="Image url" style="width: 100%;" variant="outlined">
+                </Textfield>
+            </div>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Textfield style="width: 100%;" variant="outlined"
+                           bind:value={eventDate}
+                           label="Event Time"
+                           type="datetime-local"
+                />
+            </div>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Textfield textarea bind:value={eventDescription} label="Description" style="width: 100%;"
+                           variant="outlined">
+                </Textfield>
+            </div>
+            <div style="width: 100%; padding-bottom: 10px">
+                <Button on:click={handleCreateEvent} variant="raised" style="width: 100%;">
+                    <Label>Create Event</Label>
+                </Button>
+            </div>
+        </PanelContent>
+    </Panel>
 
 </Accordion>
-
 
 
 <div style="width: 100%">
@@ -71,18 +70,14 @@
     import Textfield from '@smui/textfield';
     import Button, {Label} from '@smui/button';
     import {browser} from "$app/environment";
-    import {ethers} from "ethers";
     import {selectedAccountEvents} from "../lib/stores/eventStores.js";
-    import {selectedAccount} from "../lib/stores/selectedAccountStore.js";
     import {provider} from "../lib/stores/providerStore.js";
     import {onMount} from "svelte";
-    import {createEvent, getContract} from "../lib/clients/ethicketsAbiClient.js";
-    import {getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
+    import {createEvent, getContract, getEventsByOwner} from "../lib/clients/ethicketsAbiClient.js";
     import {goto} from "$app/navigation";
-    import {contractAddress, abi} from "../lib/constants/constants.js";
-    import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
+    import {abi, contractAddress} from "../lib/constants/constants.js";
+    import Accordion, {Content as PanelContent, Header, Panel} from '@smui-extra/accordion';
     import IconButton, {Icon} from '@smui/icon-button';
-
 
 
     // export let provider;
@@ -92,7 +87,9 @@
     let eventDate = '';
     let eventLocation = '';
     let imgUrl = '';
-    $: async ($selectedAccount) => { await getEventsByOwner(contractAddress, abi, $provider);}
+    $: async ($selectedAccount) => {
+        await getEventsByOwner(contractAddress, abi, $provider);
+    }
 
     onMount(async () => {
         await getEventsByOwner(contractAddress, abi, $provider);
@@ -109,7 +106,7 @@
         }
     }
 
-    function clearFormFields(){
+    function clearFormFields() {
         eventName = '';
         eventDescription = '';
         eventDate = '';
@@ -121,8 +118,8 @@
         if (browser && typeof window.ethereum !== "undefined") {
             const contract = await getContract(contractAddress, abi, provider);
             try {
-                 const eventz = await contract.getEvents()
-                selectedAccountEvents.update( e => eventz);
+                const eventz = await contract.getEvents()
+                selectedAccountEvents.update(e => eventz);
 
             } catch (err) {
                 console.log(err)

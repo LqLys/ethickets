@@ -13,113 +13,65 @@
     let clicked;
     $: displayAccount = innerWidth > 700 ? $selectedAccount : formatDisplayAccount($selectedAccount);
 
-    function formatDisplayAccount(acc){
+    function formatDisplayAccount(acc) {
         const start = acc.slice(0, 10);
         const end = acc.slice(-8);
         return start + '...' + end;
     }
 </script>
 <svelte:window bind:innerWidth={innerWidth}/>
-
-<TopAppBar style="background-color: #304a79" bind:this={topAppBar} variant="static">
-
-    <Row>
-        <Section>
-            {#if innerWidth <= 500  }
-                <div>
-                    <IconButton on:click={() => menuOpen = !menuOpen} class="material-icons">menu</IconButton>
-                </div>
-
-            {/if}
-            {#if innerWidth > 500}
-                <ul>
-                    <NavTitle>
-                        <a href="/">Home</a>
-                    </NavTitle>
-                    <NavTitle>
-                        <a href="/events">Events</a>
-                    </NavTitle>
-                    <NavTitle>
-                        <a href="/verify">Verify</a>
-                    </NavTitle>
-                </ul>
-            {/if}
-            <!--            <NavTitle>Fixed</NavTitle>-->
-            <!--            <NavTitle>Fixed</NavTitle>-->
-            <!--            <NavTitle>Fixed</NavTitle>-->
-        </Section>
-        <Section align="end" toolbar>
-            {#if $selectedAccount}
-                <div style="font-weight: 700">{displayAccount}</div>
-            {/if}
-            <!--                        <IconButton class="material-icons" aria-label="Download"-->
-            <!--                        >file_download-->
-            <!--                        </IconButton-->
-            <!--                        >-->
-            <!--                        <IconButton class="material-icons" aria-label="Print this page"-->
-            <!--                        >print-->
-            <!--                        </IconButton-->
-            <!--                        >-->
-            <!--                        <IconButton class="material-icons" aria-label="Bookmark this page"-->
-            <!--                        >bookmark-->
-            <!--                        </IconButton-->
-            <!--                        >-->
-        </Section>
-    </Row>
-</TopAppBar>
-<AutoAdjust {topAppBar}>
-    <!--&lt;!&ndash;    <LoremIpsum />&ndash;&gt;-->
-    <!--    <img-->
-    <!--            alt="Page content placeholder"-->
-    <!--            src="/page-content.jpg"-->
-    <!--            style="display: block; max-width: 100%; height: auto; margin: 1em auto;"-->
-    <!--    />-->
-</AutoAdjust>
-{#if menuOpen && innerWidth <= 900}
-    <div style="width: 100%; background-color: #ff3e00;">
-        <List>
-            <Item on:click={() => goto('/')} style="display: flex; justify-content: center; font-weight: 700; color: white">
-                <Text>Home</Text>
-            </Item>
-            <Item on:click={() => goto('/events')} style="display: flex; justify-content: center; font-weight: 700; color: white">
-                <Text>Events</Text>
-            </Item>
-            <Item on:click={() => goto('/verify')} style="display: flex; justify-content: center; font-weight: 700; color: white">
-                <Text>Verify</Text>
-            </Item>
-        </List>
-    </div>
-{/if}
-<!--{#if $selectedAccount}-->
-
-<!--{/if}-->
 <header>
-    <!--    <div class="corner">-->
-    <!--        <a href="https://kit.svelte.dev">-->
-    <!--            <img src={logo} alt="SvelteKit"/>-->
-    <!--        </a>-->
-    <!--    </div>-->
+    <TopAppBar style="background-color: #304a79" bind:this={topAppBar} variant="static">
 
-    <!--    <nav>-->
-    <!--   -->
-    <!--    </nav>-->
-
-    <!--    <div class="corner">-->
-    <!--        <a href="https://github.com/sveltejs/kit">-->
-    <!--            <img src={github} alt="GitHub"/>-->
-    <!--        </a>-->
-    <!--    </div>-->
+        <Row>
+            <Section>
+                {#if innerWidth <= 500  }
+                    <div>
+                        <IconButton on:click={() => menuOpen = !menuOpen} class="material-icons">menu</IconButton>
+                    </div>
+                {/if}
+                {#if innerWidth > 500}
+                    <ul>
+                        <NavTitle>
+                            <a href="/">Home</a>
+                        </NavTitle>
+                        <NavTitle>
+                            <a href="/events">Events</a>
+                        </NavTitle>
+                        <NavTitle>
+                            <a href="/verify">Verify</a>
+                        </NavTitle>
+                    </ul>
+                {/if}
+            </Section>
+            <Section align="end" toolbar>
+                {#if $selectedAccount}
+                    <div style="font-weight: 700">{displayAccount}</div>
+                {/if}
+            </Section>
+        </Row>
+    </TopAppBar>
+    <AutoAdjust {topAppBar}></AutoAdjust>
+    {#if menuOpen && innerWidth <= 900}
+        <div style="width: 100%; background-color: #ff3e00;">
+            <List>
+                <Item on:click={() => goto('/')}
+                      style="display: flex; justify-content: center; font-weight: 700; color: white">
+                    <Text>Home</Text>
+                </Item>
+                <Item on:click={() => goto('/events')}
+                      style="display: flex; justify-content: center; font-weight: 700; color: white">
+                    <Text>Events</Text>
+                </Item>
+                <Item on:click={() => goto('/verify')}
+                      style="display: flex; justify-content: center; font-weight: 700; color: white">
+                    <Text>Verify</Text>
+                </Item>
+            </List>
+        </div>
+    {/if}
 </header>
-<!--{#if $selectedAccount}-->
-<!--    <div style="display: flex; justify-content: center; margin-top: 5px">-->
-<!--        <Paper color="secondary" style="padding: 5px" elevation={30}>-->
-<!--            &lt;!&ndash;            <Title>{$provider?.provider?.selectedAddress}</Title>&ndash;&gt;-->
-<!--            <Content style="font-size: 0.8rem; font-weight: bolder">-->
-<!--                {$selectedAccount}-->
-<!--            </Content>-->
-<!--        </Paper>-->
-<!--    </div>-->
-<!--{/if}-->
+
 <style>
     header {
         display: flex;
@@ -173,24 +125,6 @@
         background: var(--background);
         background-size: contain;
     }
-
-    /*li {*/
-    /*    position: relative;*/
-    /*    height: 100%;*/
-    /*}*/
-
-    /*li.active::before {*/
-    /*    --size: 6px;*/
-    /*    content: '';*/
-    /*    width: 0;*/
-    /*    height: 0;*/
-    /*    position: absolute;*/
-    /*    top: 0;*/
-    /*    left: calc(50% - var(--size));*/
-    /*    border: var(--size) solid transparent;*/
-    /*    border-top: var(--size) solid var(--color-theme-1);*/
-    /*}*/
-
     a {
         color: var(--color-theme-1);
     }

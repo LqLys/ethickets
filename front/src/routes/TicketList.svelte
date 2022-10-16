@@ -184,6 +184,7 @@
     function handlePriceUnitSelected(unit) {
         selectedUnitPrice.update(e => unit);
     }
+
     function handleTicketFilterChaned(filter) {
         ticketFilter = filter;
     }

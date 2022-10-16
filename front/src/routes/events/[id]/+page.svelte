@@ -1,6 +1,5 @@
 <div>
     <TabBar tabs={['Event Info', 'Tickets']} let:tab bind:active>
-        <!-- Note: the `tab` property is required! -->
         <Tab {tab}>
             <TabLabel>{tab}</TabLabel>
         </Tab>
