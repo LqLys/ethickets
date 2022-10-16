@@ -15,6 +15,22 @@
             </FormField>
         {/each}
     </div>
+    <div class="radio-demo">
+        Ticket filter options:
+        {#each ticketFilterOptions as option}
+            <FormField>
+                <Radio
+                        bind:group={ticketFilter}
+                        value={option.name}
+                        disabled={option.disabled}
+                        on:click={() =>handleTicketFilterChaned(option.name)}
+                />
+                <span slot="label">
+        {option.name}
+      </span>
+            </FormField>
+        {/each}
+    </div>
 
     <List
             class="demo-list"
@@ -22,9 +38,10 @@
             avatarList
             singleSelection
     >
-        {#each tickets as item (item.id)}
+        {#each filteredTickets as item (item.id)}
             {#if item.isForSale || item.owner.toLowerCase() === $selectedAccount.toLowerCase()}
-                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket} lockInFn={handleLockInTicket} priceUnit={priceUnit}/>
+                <TicketListItem ticketData={item} buyFn={handleBuyTicket} editFn={handleEditTicket}
+                                lockInFn={handleLockInTicket} priceUnit={priceUnit}/>
             {/if}
         {/each}
     </List>
@@ -42,12 +59,15 @@
                     </Header>
                     <PanelContent>
                         <div style="width: 100%; padding-bottom: 10px">
-                            <Textfield bind:value={ticketsAmount} type="number" label="Amount to add" style="width: 100%;"
+                            <Textfield bind:value={ticketsAmount} type="number" label="Amount to add"
+                                       style="width: 100%;"
                                        variant="outlined">
                             </Textfield>
                         </div>
                         <div style="width: 100%; padding-bottom: 10px">
-                            <Textfield value={displayTicketPrice} on:input={e => ticketPrice = asWei(e.target.value, $selectedUnitPrice)} type="text" label="Price" style="width: 100%;" variant="outlined">
+                            <Textfield value={displayTicketPrice}
+                                       on:input={e => ticketPrice = asWei(e.target.value, $selectedUnitPrice)}
+                                       type="text" label="Price" style="width: 100%;" variant="outlined">
                             </Textfield>
                         </div>
 
@@ -58,7 +78,7 @@
                         </div>
                     </PanelContent>
                 </Panel>
-                {/if}
+            {/if}
         </Accordion>
     </div>
 
@@ -66,7 +86,7 @@
 </div>
 
 <script>
-    import List, {Item,} from '@smui/list';
+    import List from '@smui/list';
     import {onMount} from "svelte";
     import {
         addTickets,
@@ -85,9 +105,9 @@
     import Button, {Label} from '@smui/button';
     import Textfield from '@smui/textfield';
     import TicketListItem from "./TicketListItem.svelte";
-    import Accordion, { Panel, Header, Content as PanelContent } from '@smui-extra/accordion';
-    import IconButton, { Icon } from '@smui/icon-button'
-    import {formatDisplayPrice, asWei} from "../lib/clients/utils.js";
+    import Accordion, {Content as PanelContent, Header, Panel} from '@smui-extra/accordion';
+    import IconButton, {Icon} from '@smui/icon-button'
+    import {asWei, formatDisplayPrice} from "../lib/clients/utils.js";
 
     export let event;
     let tickets = [];
@@ -97,6 +117,7 @@
     $: displayTicketPrice = formatDisplayPrice(ticketPrice, $selectedUnitPrice)
 
     let addTicketsPanelOpen = false;
+    $: filteredTickets = applyTicketFilter(tickets, ticketFilter);
 
     let options = [
         {
@@ -108,11 +129,37 @@
             disabled: false,
         }
     ];
+
+    let ticketFilterOptions = [
+        {
+            name: 'All'
+        },
+        {
+            name: 'Owned'
+        },
+        {
+            name: 'For Sale'
+        }
+    ]
     let priceUnit = 'Ether';
+    let ticketFilter = 'Owned';
 
     onMount(async () => {
         tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider)
     })
+
+    function applyTicketFilter(tickets, filter) {
+        switch (filter) {
+            case "Owned":
+                return tickets.filter(t => t.owner?.toLowerCase() === $selectedAccount.toLowerCase());
+            case "All":
+                return [...tickets];
+            case "For Sale":
+                return tickets.filter(t => t.owner?.toLowerCase() !== $selectedAccount.toLowerCase() && !!t.isForSale)
+            default:
+                return [...tickets];
+        }
+    }
 
     async function handleAddTicketsToEvent() {
         await addTickets($page.params.id, ticketsAmount, ticketPrice, contractAddress, abi, $provider);
@@ -134,7 +181,10 @@
         tickets = await getEventTickets($page.params.id, contractAddress, abi, $provider);
     }
 
-    function handlePriceUnitSelected(unit){
+    function handlePriceUnitSelected(unit) {
         selectedUnitPrice.update(e => unit);
+    }
+    function handleTicketFilterChaned(filter) {
+        ticketFilter = filter;
     }
 </script>
